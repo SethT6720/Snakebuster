@@ -94,13 +94,24 @@ function drawSnakeSquare(x, y, head) { //draws a square at the given x and y usi
   ctx.strokeRect(x, y, size, size);
 }
 
-function drawApple(x, y){
+function drawApple(x, y) {
   ctx.fillStyle = 'red';
   ctx.fillRect(x, y, size, size);
   ctx.strokeRect(x, y, size, size);
 }
 
-function createRandomApple(){
+function createRandomApple() {
+  let randX = Math.floor(Math.random() * gridX);
+  let randY = Math.floor(Math.random() * gridY);
+  let applePosition = [randX, randY];
+
+  let snakeThere = arrayIncludes(previousPosition, applePosition);
+  while (snakeThere) {
+    applePosition[0] = Math.floor(Math.random() * gridX);
+    applePosition[1] = Math.floor(Math.random() * gridY);
+
+    snakeThere = arrayIncludes(previousPosition, applePosition);
+  }
   
 }
 
