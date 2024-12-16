@@ -60,8 +60,9 @@ else {
 
 
 
-const squareSizeFactor = 20 //this describes how big or small each square is, lower is bigger, higher is smaller
-const snakeColor = [255, 255, 0]
+const squareSizeFactor = 20; //this describes how big or small each square is, lower is bigger, higher is smaller
+let snakeColor = [125, 255, 150];
+let headColor = [0, 255, 0];
 
 function squareSize() { //calculates the dimensions of the square based on the screen size
   return game.width / squareSizeFactor;
@@ -79,17 +80,28 @@ function createBackGround() { //creates a black grid
     }
   }
 }
-
+   
 function drawRegSquare(x, y) { //Draws a background/black square at the specified x and y positions USE PIXELS NOT SQUARES
   ctx.fillStyle = 'black';
   ctx.fillRect(x, y, size, size);
   ctx.strokeRect(x, y, size, size);
 }
 
-function drawSnakeSquare(x, y) { //draws a square at the given x and y using snake parameters
-  ctx.fillStyle = `rgb(${snakeColor[0]} ${snakeColor[1]} ${snakeColor[2]})`; //takes colors and just makes them the fill style
+function drawSnakeSquare(x, y, head) { //draws a square at the given x and y using snake parameters
+  if (head) ctx.fillStyle = `rgb(${headColor[0]}, ${headColor[1]}, ${headColor[2]})`;
+  if (!head) ctx.fillStyle = `rgb(${snakeColor[0]} ${snakeColor[1]} ${snakeColor[2]})`; //takes colors and just makes them the fill style
   ctx.fillRect(x, y, size, size);
   ctx.strokeRect(x, y, size, size);
+}
+
+function drawApple(x, y){
+  ctx.fillStyle = 'red';
+  ctx.fillRect(x, y, size, size);
+  ctx.strokeRect(x, y, size, size);
+}
+
+function createRandomApple(){
+  
 }
 
 //variables for size and stuff
@@ -103,6 +115,7 @@ const initButton = get('initButton');
 const deadToShop = get('deadToShop');
 const winToShop = get('winToShop');
 const shopToGame = get('goToGame');
+const cheatCodeButton = get('cheatCodeButton');
 
 
 //Nav event listeners
@@ -123,7 +136,15 @@ buttonOnClick(shopToGame, () => {
   draw();
   move();
   goToGame(shop);
-})
+});
+
+buttonOnClick(cheatCodeButton, () => {
+  let promptAnswer = prompt('CODE:')
+  if (promptAnswer == 'imadev') {
+    speed = Number(prompt('Speed: '));
+    snakeLength = Number(prompt('Snake Length: '));
+  }
+});
 
 //psuedo code ish
 /*
@@ -236,7 +257,7 @@ async function move() { //Call this function to initiate the game, lets you move
         break;
     }
 
-    if (!(position[0] >= 0 && position[0] <= 19 && position[1] >= 0 && position[1] <= 19)) { //This makes sure the snake is within the bounds of play, if it calls lose(); and takes you to the death screen
+    if (!(position[0] >= 0 && position[0] <= (gridX -1) && position[1] >= 0 && position[1] <= (gridY - 1))) { //This makes sure the snake is within the bounds of play, if it calls lose(); and takes you to the death screen
       lose();
       return;
     }
@@ -256,7 +277,10 @@ async function move() { //Call this function to initiate the game, lets you move
           return;
         }
       }
-      drawSnakeSquare(position[0] * size, position[1] * size); //Draws the new head at the new position
+      let length = previousPosition.length
+      length -= 2;
+      drawSnakeSquare(previousPosition[length][0] * size, previousPosition[length][1] * size, false); //Replaces the previous head with a regular square
+      drawSnakeSquare(position[0] * size, position[1] * size, true); //Draws the new head at the new position
     }
   }  
 }
@@ -264,5 +288,5 @@ async function move() { //Call this function to initiate the game, lets you move
 
 function draw() {
   createBackGround();
-  drawSnakeSquare(position[0] * squareSizeFactor, position[1] * squareSizeFactor);
+  drawSnakeSquare(position[0] * squareSizeFactor, position[1] * squareSizeFactor, true);
 }
