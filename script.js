@@ -25,7 +25,7 @@ function buttonOnClick(button, func) { //adds an event listener to a button
    button.addEventListener('click', func); 
 }
 
-const sleep = (ms) => {
+const sleep = (ms) => { //timeout function for asynchronous functions, especially helpful in while(true) loop situations
   return new Promise(resolve => setTimeout(resolve, ms))
 }
 
@@ -67,20 +67,20 @@ function squareSize() { //calculates the dimensions of the square based on the s
   return game.width / squareSizeFactor;
 }
 
-function createBackGround() { //creates a black and white grid
+function createBackGround() { //creates a black grid
   ctx.fillStyle = 'black';
   ctx.strokeStyle = 'white';
   for (let i = 0; i < gridX; i++) {
     for (let j = 0; j < gridY; j++) {
-      let x = i * squareSize();
-      let y = j * squareSize();
+      let x = i * size;
+      let y = j * size;
       ctx.fillRect(x, y, size, size);
       ctx.strokeRect(x, y, size, size);
     }
   }
 }
 
-function drawRegSquare(x, y) {
+function drawRegSquare(x, y) { //Draws a background/black square at the specified x and y positions USE PIXELS NOT SQUARES
   ctx.fillStyle = 'black';
   ctx.fillRect(x, y, size, size);
   ctx.strokeRect(x, y, size, size);
@@ -88,14 +88,14 @@ function drawRegSquare(x, y) {
 
 function drawSnakeSquare(x, y) { //draws a square at the given x and y using snake parameters
   ctx.fillStyle = `rgb(${snakeColor[0]} ${snakeColor[1]} ${snakeColor[2]})`; //takes colors and just makes them the fill style
-  ctx.fillRect(x, y, squareSize(), squareSize());
-  ctx.strokeRect(x, y, squareSize(), squareSize());
+  ctx.fillRect(x, y, size, size);
+  ctx.strokeRect(x, y, size, size);
 }
 
 //variables for size and stuff
-let size = squareSize();
-let gridX = squareSizeFactor;
-let gridY = squareSizeFactor;
+let size = squareSize(); //Pixel size of each square, assigned to a variable for easier use
+let gridX = squareSizeFactor; //How many squares there are horizontally
+let gridY = squareSizeFactor; //How many squares there are vertically
 
 
 //buttons
@@ -140,7 +140,7 @@ loop back to top
 */ 
 
 
-function arrayIncludes(array, item) {
+function arrayIncludes(array, item) { // Converts arrays into strings then checks if it contains a specified array
   let a = JSON.stringify(array);
   let b = JSON.stringify(item);
   let c = a.indexOf(b);
@@ -155,20 +155,20 @@ function arrayIncludes(array, item) {
 
 
 //Game Vars
-let direction = 'none';
-let speed = 20;
-let inGame = false;
-let hitSelf = false;
-let position = [0, 0];
-let snakeLength = 10;
-let previousPosition = [[0, 0]];
+let direction = 'none'; //Direction snake is facing
+let speed = 20; //How fast the snake moves
+let inGame = false; //Are you in Battle?
+let hitSelf = false;  //Is the snake hitting itself
+let position = [0, 0]; //The snake head's position 
+let snakeLength = 10; //# of blocks that make up the snake
+let previousPosition = [[0, 0]]; //Positions of all other blocks of the snake beside the head
 
 
-async function move() {
+async function move() { //Call this function to initiate the game, lets you move the snake, and checks for out of bounds and if it's hitting itself. It resets itself and is ready to run again immediately after it returns
 
-  function keyTracker(key) {
-    switch (key) {
-      case 'ArrowUp':
+  function keyTracker(key) { //Function to change direction based off of what key is being pressed
+    switch (key) { //key needs to be from a window eventlistener with the keydown specification
+      case 'ArrowUp': //Should be self-explanatory, switches direction of the snake when arrow key is pressed
         if (direction !== 'down') {
           direction = 'up';
           console.log('up', direction);
@@ -197,27 +197,27 @@ async function move() {
     }
   }
 
-  function lose() {
-    controller.abort();
-    inGame = false;
+  function lose() { //This is called when something happens that makes you lose
+    controller.abort(); //This cancels the arrow key event listener to make sure direction is only being changed while ingame and multiple eventlisteners aren't being added at the same time
+    inGame = false; //resets stuff
     hitSelf = false;
     position[0] = 0;
     position[1] = 0;
     previousPosition = [[0, 0]];
-    game.classList.add('hide');
+    game.classList.add('hide'); //go to dead page
     dead.classList.remove('hide');
     direction = 'none';
   }
 
-  const controller = new AbortController();
-  window.addEventListener('keydown', (e) => {
+  const controller = new AbortController(); //This is necessary to abort the event listener
+  window.addEventListener('keydown', (e) => { //Tracks the keys pressed and inputs it into the keyTracker() function
     keyTracker(e.key);
-  }, { signal: controller.signal });
+  }, { signal: controller.signal }); //The { signal: controller.signal } allows you to abort the listener by calling controller.abort(); 
   
-  while (inGame) {
-    await sleep(4000 / speed);
+  while (inGame) { //The game loop and momving around and such
+    await sleep(4000 / speed); //Tick/move speed
         
-    switch (direction) {
+    switch (direction) { //Changes position based on which direction the snake is facing which is found based on key inputs
       case 'up':
         position[1] -= 1;
         break;
@@ -236,33 +236,33 @@ async function move() {
         break;
     }
 
-    if (!(position[0] >= 0 && position[0] <= 19 && position[1] >= 0 && position[1] <= 19)) {
+    if (!(position[0] >= 0 && position[0] <= 19 && position[1] >= 0 && position[1] <= 19)) { //This makes sure the snake is within the bounds of play, if it calls lose(); and takes you to the death screen
       lose();
       return;
     }
 
-    if (direction !== 'none') {
+    if (direction !== 'none') { //This is the canvas settings this specicfic if makes sure the snake doesn't move until after the first key input
       console.log(position[0], position[1]);
-      let temp = [[position[0].valueOf(), position[1].valueOf()]];
-      previousPosition = previousPosition.concat(temp);
+      let temp = [[position[0].valueOf(), position[1].valueOf()]]; //Temporary array that is going to be put into previousPosition for storage
+      previousPosition = previousPosition.concat(temp); //Adds in the current position into previousPosition
     
-      if (previousPosition.length > snakeLength) {
-        drawRegSquare(previousPosition[0][0] * size, previousPosition[0][1] * size);
-        previousPosition = previousPosition.slice(1);
-        let check = previousPosition.slice(0, previousPosition.length - 3);
-        if (arrayIncludes(check, position)) {
+      if (previousPosition.length > snakeLength) { //Checks if there are more drawn squares than the snake shoul have and deletes excess
+        drawRegSquare(previousPosition[0][0] * size, previousPosition[0][1] * size); //Draws a black square at the oldest position
+        previousPosition = previousPosition.slice(1); //Removes the last position from previousPosition
+        let check = previousPosition.slice(0, previousPosition.length - 3); //This cuts off the first three positions from previousPosition so it can be inserted into the next function to check if the snake is hitting itself. This is necessary so it doesn't think the head of the snake is constantly hitting itself and you don't lose instantly
+        if (arrayIncludes(check, position)) { //Checks the head position is within the body, or if the the snake is hitting itself
           hitSelf = true;
           lose();
           return;
         }
       }
-      drawSnakeSquare(position[0] * size, position[1] * size);
+      drawSnakeSquare(position[0] * size, position[1] * size); //Draws the new head at the new position
     }
   }  
 }
 
 
-function draw(){
+function draw() {
   createBackGround();
   drawSnakeSquare(position[0] * squareSizeFactor, position[1] * squareSizeFactor);
 }
