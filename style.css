@@ -1,0 +1,34 @@
+* {
+    box-sizing: border-box;
+  }
+  
+  html {
+    height: 100%;
+    width: 100%;
+  }
+  
+  h1 {
+    text-align: center;
+  }
+  
+  p {
+    text-align: center;
+  }
+  
+  .hide {
+    display: none !important;
+  }
+  
+  #titleScreen {
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    justify-content: center;
+  }
+  
+  #game {
+    border: 1px solid black;
+    margin-left: 25%;
+  } /* scaling using css creates a weird blur effect 
+  yea i realized that i was going to change it*/
+  
