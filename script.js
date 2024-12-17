@@ -61,7 +61,7 @@ else {
 
 
 
-let squareSizeFactor = 20; //this describes how big or small each square is, lower is bigger, higher is smaller
+let squareSizeFactor = 21; //this describes how big or small each square is, lower is bigger, higher is smaller
 let snakeColor = [125, 255, 150];
 let headColor = [0, 255, 0];
 
@@ -104,7 +104,7 @@ function drawApple(x, y) {
 function createRandomApple() {
   let randX = Math.floor(Math.random() * gridX);
   let randY = Math.floor(Math.random() * gridY);
-  let applePosition = [randX, randY];
+  applePosition = [randX, randY];
 
   let snakeThere = arrayIncludes(previousPosition, applePosition);
   while (snakeThere) {
@@ -113,7 +113,8 @@ function createRandomApple() {
 
     snakeThere = arrayIncludes(previousPosition, applePosition);
   }
-  
+
+  drawApple(applePosition[0] * size, applePosition[1] * size);
 }
 
 //variables for size and stuff
@@ -203,10 +204,13 @@ let inGame = false; //Are you in Battle?
 let hitSelf = false;  //Is the snake hitting itself
 let horizontal = false; //True if snake is travelling horizontally
 let vertical = false; //True if snake is traveling vertically
-let position = [0, 0]; //The snake head's position 
-let snakeLength = 10; //# of blocks that make up the snake
-let previousPosition = [[0, 0]]; //Positions of all other blocks of the snake beside the head
-
+let startingSnakeLength = 10;
+let snakeLength = startingSnakeLength; //# of blocks that make up the snake
+let startingPosition = [2, 10];
+let appleStartingPosition = [startingPosition[0] + 10, startingPosition[1]];
+let applePosition = [appleStartingPosition[0].valueOf(), appleStartingPosition[1].valueOf()];
+let position = [startingPosition[0].valueOf(), startingPosition[1].valueOf()]; //The snake head's position 
+let previousPosition = [[position[0].valueOf(), position[1].valueOf()]]; //Positions of all other blocks of the snake beside the head
 
 async function move() { //Call this function to initiate the game, lets you move the snake, and checks for out of bounds and if it's hitting itself. It resets itself and is ready to run again immediately after it returns
 
@@ -247,9 +251,10 @@ async function move() { //Call this function to initiate the game, lets you move
     hitSelf = false;
     vertical = false;
     horizontal = false;
-    position[0] = 0;
-    position[1] = 0;
-    previousPosition = [[0, 0]];
+    snakeLength = startingSnakeLength;
+    position[0] = startingPosition[0].valueOf();
+    position[1] = startingPosition[1].valueOf();
+    previousPosition = [[position[0].valueOf(), position[1].valueOf()]];
     game.classList.add('hide'); //go to dead page
     dead.classList.remove('hide');
     direction = 'none';
@@ -306,11 +311,16 @@ async function move() { //Call this function to initiate the game, lets you move
         
       }
 
-      let check = previousPosition.slice(0, previousPosition.length - 3); //This cuts off the first three positions from previousPosition so it can be inserted into the next function to check if the snake is hitting itself. This is necessary so it doesn't think the head of the snake is constantly hitting itself and you don't lose instantly
-      if (arrayIncludes(check, position)) { //Checks the head position is within the body, or if the the snake is hitting itself
+      let checkSnake = previousPosition.slice(0, previousPosition.length - 3); //This cuts off the first three positions from previousPosition so it can be inserted into the next function to check if the snake is hitting itself. This is necessary so it doesn't think the head of the snake is constantly hitting itself and you don't lose instantly
+      if (arrayIncludes(checkSnake, position)) { //Checks the head position is within the body, or if the the snake is hitting itself
         hitSelf = true;
         lose();
         return;
+      }
+
+      if (arrayIncludes(applePosition, position)) {
+        createRandomApple();
+        snakeLength++;
       }
 
       let length = previousPosition.length
@@ -324,5 +334,7 @@ async function move() { //Call this function to initiate the game, lets you move
 
 function draw() {
   createBackGround();
-  drawSnakeSquare(position[0] * squareSizeFactor, position[1] * squareSizeFactor, true);
+  drawSnakeSquare(startingPosition[0] * size, startingPosition[1] * size, true);
+  drawApple(appleStartingPosition[0] * size, appleStartingPosition[1] * size);
+  applePosition = [appleStartingPosition[0].valueOf(), appleStartingPosition[1].valueOf()];
 }
