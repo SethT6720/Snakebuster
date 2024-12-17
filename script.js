@@ -124,6 +124,8 @@ let gridY = squareSizeFactor; //How many squares there are vertically
 function updateGrids() {
   gridX = squareSizeFactor
   gridY = squareSizeFactor
+  size = squareSize();
+  createBackGround();
 }
 
 
