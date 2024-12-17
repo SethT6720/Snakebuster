@@ -191,6 +191,8 @@ let direction = 'none'; //Direction snake is facing
 let speed = 20; //How fast the snake moves
 let inGame = false; //Are you in Battle?
 let hitSelf = false;  //Is the snake hitting itself
+let horizontal = false; //True if snake is travelling horizontally
+let vertical = false; //True if snake is traveling vertically
 let position = [0, 0]; //The snake head's position 
 let snakeLength = 10; //# of blocks that make up the snake
 let previousPosition = [[0, 0]]; //Positions of all other blocks of the snake beside the head
@@ -201,25 +203,25 @@ async function move() { //Call this function to initiate the game, lets you move
   function keyTracker(key) { //Function to change direction based off of what key is being pressed
     switch (key) { //key needs to be from a window eventlistener with the keydown specification
       case 'ArrowUp': //Should be self-explanatory, switches direction of the snake when arrow key is pressed
-        if (direction !== 'down') {
+        if (!vertical) {
           direction = 'up';
           console.log('up', direction);
         }
         break;
       case 'ArrowDown':
-        if (direction !== 'up') {
+        if (!vertical) {
           direction = 'down';
           console.log('down', direction);
         }
         break;
       case 'ArrowLeft':
-        if (direction !== 'right') {
+        if (!horizontal) {
           direction = 'left';
           console.log('left', direction);
         }
         break;
       case 'ArrowRight':
-        if (direction !== 'left') {
+        if (!horizontal) {
           direction = 'right';
           console.log('right', direction);
         }
@@ -233,6 +235,8 @@ async function move() { //Call this function to initiate the game, lets you move
     controller.abort(); //This cancels the arrow key event listener to make sure direction is only being changed while ingame and multiple eventlisteners aren't being added at the same time
     inGame = false; //resets stuff
     hitSelf = false;
+    vertical = false;
+    horizontal = false;
     position[0] = 0;
     position[1] = 0;
     previousPosition = [[0, 0]];
@@ -252,15 +256,23 @@ async function move() { //Call this function to initiate the game, lets you move
     switch (direction) { //Changes position based on which direction the snake is facing which is found based on key inputs
       case 'up':
         position[1] -= 1;
+        vertical = true;
+        horizontal = false;
         break;
       case 'down':
         position[1] += 1;
+        vertical = true;
+        horizontal = false;
         break;
       case 'right':
         position[0] += 1;
+        vertical = false;
+        horizontal = true;
         break;
       case 'left':
         position[0] -= 1;
+        vertical = false;
+        horizontal = true;
         break;
       case 'none':
         break;
