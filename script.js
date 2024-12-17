@@ -120,6 +120,11 @@ let size = squareSize(); //Pixel size of each square, assigned to a variable for
 let gridX = squareSizeFactor; //How many squares there are horizontally
 let gridY = squareSizeFactor; //How many squares there are vertically
 
+function updateGrids() {
+  gridX = squareSizeFactor
+  gridY = squareSizeFactor
+}
+
 
 //buttons
 const initButton = get('initButton');
@@ -155,6 +160,7 @@ buttonOnClick(cheatCodeButton, () => {
     speed = Number(prompt('Speed: '));
     snakeLength = Number(prompt('Snake Length: '));
     squareSizeFactor = Number(prompt('Square size factor: '));
+    updateGrids();
   }
 });
 
