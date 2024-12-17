@@ -60,7 +60,7 @@ else {
 
 
 
-const squareSizeFactor = 20; //this describes how big or small each square is, lower is bigger, higher is smaller
+let squareSizeFactor = 20; //this describes how big or small each square is, lower is bigger, higher is smaller
 let snakeColor = [125, 255, 150];
 let headColor = [0, 255, 0];
 
@@ -154,6 +154,7 @@ buttonOnClick(cheatCodeButton, () => {
   if (promptAnswer == 'imadev') {
     speed = Number(prompt('Speed: '));
     snakeLength = Number(prompt('Snake Length: '));
+    squareSizeFactor = Number(prompt('Square size factor: '));
   }
 });
 
