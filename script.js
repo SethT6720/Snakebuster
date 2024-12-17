@@ -294,13 +294,16 @@ async function move() { //Call this function to initiate the game, lets you move
       if (previousPosition.length > snakeLength) { //Checks if there are more drawn squares than the snake shoul have and deletes excess
         drawRegSquare(previousPosition[0][0] * size, previousPosition[0][1] * size); //Draws a black square at the oldest position
         previousPosition = previousPosition.slice(1); //Removes the last position from previousPosition
-        let check = previousPosition.slice(0, previousPosition.length - 3); //This cuts off the first three positions from previousPosition so it can be inserted into the next function to check if the snake is hitting itself. This is necessary so it doesn't think the head of the snake is constantly hitting itself and you don't lose instantly
-        if (arrayIncludes(check, position)) { //Checks the head position is within the body, or if the the snake is hitting itself
-          hitSelf = true;
-          lose();
-          return;
-        }
+        
       }
+
+      let check = previousPosition.slice(0, previousPosition.length - 3); //This cuts off the first three positions from previousPosition so it can be inserted into the next function to check if the snake is hitting itself. This is necessary so it doesn't think the head of the snake is constantly hitting itself and you don't lose instantly
+      if (arrayIncludes(check, position)) { //Checks the head position is within the body, or if the the snake is hitting itself
+        hitSelf = true;
+        lose();
+        return;
+      }
+
       let length = previousPosition.length
       length -= 2;
       drawSnakeSquare(previousPosition[length][0] * size, previousPosition[length][1] * size, false); //Replaces the previous head with a regular square
