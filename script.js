@@ -40,6 +40,7 @@ const dead = get('dead');
 const win = get('win');
 const screenWidth = window.innerWidth;
 const screenHeight = window.innerHeight;
+const statDisplay = get('statDisplay');
 
 
 
