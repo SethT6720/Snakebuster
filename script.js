@@ -122,11 +122,21 @@ let size = squareSize(); //Pixel size of each square, assigned to a variable for
 let gridX = squareSizeFactor; //How many squares there are horizontally
 let gridY = squareSizeFactor; //How many squares there are vertically
 
-function updateGrids() {
+function update() {
+  if (squareSizeFactor < 9) squareSizeFactor = 9;
   gridX = squareSizeFactor
   gridY = squareSizeFactor
   size = squareSize();
   createBackGround();
+  startingPosition = [2, Math.round(gridY / 2) - 1];
+  appleStartingPosition = [startingPosition[0] + (Math.round(gridX / 2)), startingPosition[1]];
+  applePosition = [appleStartingPosition[0].valueOf(), appleStartingPosition[1].valueOf()];
+  position = [startingPosition[0].valueOf(), startingPosition[1].valueOf()];
+  previousPosition = [[position[0].valueOf(), position[1].valueOf()]];
+}
+
+function updateStatDisplay(){
+  statDisplay.innerHTML = `<p>Speed: ${speed}</p> <p>HP: Placeholder</p> <p>Max Apples: 1</p> <p>Screen Size: ${gridX} x ${gridY}</p> <p>Difficulty: Placeholder</p> <p>Armor: Placeholder</p> <p>HP Regen: Placeholder</p>`;
 }
 
 
@@ -164,7 +174,8 @@ buttonOnClick(cheatCodeButton, () => {
     speed = Number(prompt('Speed: '));
     snakeLength = Number(prompt('Snake Length: '));
     squareSizeFactor = Number(prompt('Square size factor: '));
-    updateGrids();
+    update();
+    updateStatDisplay();
   }
 });
 
@@ -199,15 +210,21 @@ function arrayIncludes(array, item) { // Converts arrays into strings then check
 
 //Game Vars
 let direction = 'none'; //Direction snake is facing
+
 let speed = 20; //How fast the snake moves
+
 let inGame = false; //Are you in Battle?
 let hitSelf = false;  //Is the snake hitting itself
+
 let horizontal = false; //True if snake is travelling horizontally
 let vertical = false; //True if snake is traveling vertically
+
 let startingSnakeLength = 10;
 let snakeLength = startingSnakeLength; //# of blocks that make up the snake
-let startingPosition = [2, 10];
-let appleStartingPosition = [startingPosition[0] + 10, startingPosition[1]];
+
+let startingPosition = [2, Math.round(gridY / 2) - 1];
+let appleStartingPosition = [startingPosition[0] + (Math.round(gridX / 2)), startingPosition[1]];
+
 let applePosition = [appleStartingPosition[0].valueOf(), appleStartingPosition[1].valueOf()];
 let position = [startingPosition[0].valueOf(), startingPosition[1].valueOf()]; //The snake head's position 
 let previousPosition = [[position[0].valueOf(), position[1].valueOf()]]; //Positions of all other blocks of the snake beside the head
@@ -318,7 +335,7 @@ async function move() { //Call this function to initiate the game, lets you move
         return;
       }
 
-      if (arrayIncludes(applePosition, position)) {
+      if (arrayIncludes(applePosition, position)) { //AFTER APPLE IS EATEN///////////////////////////////
         createRandomApple();
         snakeLength++;
       }
