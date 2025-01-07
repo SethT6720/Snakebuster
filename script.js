@@ -121,7 +121,7 @@ function createRandomApple() {
     appleThere = arrayIncludes(applePosition, [randX, randY]);
   }
 
-  applePosition.push([randX, randY]);
+  applePosition.push([randX.valueOf(), randY.valueOf]);
   drawApple(randX * size, randY * size);
 }
 
@@ -138,7 +138,7 @@ function update() {
   createBackGround();
   startingPosition = [2, Math.round(gridY / 2) - 1];
   appleStartingPosition = [startingPosition[0] + (Math.round(gridX / 2)), startingPosition[1]];
-  applePosition = [appleStartingPosition[0].valueOf(), appleStartingPosition[1].valueOf()];
+  applePosition = [[appleStartingPosition[0].valueOf(), appleStartingPosition[1].valueOf()]];
   position = [startingPosition[0].valueOf(), startingPosition[1].valueOf()];
   previousPosition = [[position[0].valueOf(), position[1].valueOf()]];
 }
