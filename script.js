@@ -61,11 +61,11 @@ else {
 
 
 
-let squareSizeFactor = 21; //this describes how big or small each square is, lower is bigger, higher is smaller
-let snakeColor = [125, 255, 150];
-let headColor = [0, 255, 0];
+let squareSizeFactor = 21; //Number of squares in the X and Y directions, MAKE SURE THIS IS ODD
+let snakeColor = [125, 255, 150]; // Color of the snake body
+let headColor = [0, 255, 0]; // Color of the snake head
 
-function squareSize() { //calculates the dimensions of the square based on the screen size
+function squareSize() { //calculates the dimensions of each square based on the screen size
   return game.width / squareSizeFactor;
 }
 
@@ -88,35 +88,33 @@ function drawRegSquare(x, y) { //Draws a background/black square at the specifie
   ctx.strokeRect(x, y, size, size);
 }
 
-function drawSnakeSquare(x, y, head) { //draws a square at the given x and y using snake parameters
+function drawSnakeSquare(x, y, head) { //draws a square at the given x and y using snake parameters. The head parameter checks if the square is the head and colors it differently
   if (head) ctx.fillStyle = `rgb(${headColor[0]}, ${headColor[1]}, ${headColor[2]})`;
   if (!head) ctx.fillStyle = `rgb(${snakeColor[0]} ${snakeColor[1]} ${snakeColor[2]})`; //takes colors and just makes them the fill style
   ctx.fillRect(x, y, size, size);
   ctx.strokeRect(x, y, size, size);
 }
 
-function drawApple(x, y) {
+function drawApple(x, y) { //Draws an apple at the specified coordinates
   ctx.fillStyle = 'red';
   ctx.fillRect(x, y, size, size);
   ctx.strokeRect(x, y, size, size);
 }
 
-function createRandomApple() {
+function createRandomApple() { //Creates a new apple at a randomized position, also removes old apple positions from applePosition and adds the new one as well as draws it
+  if (arrayIncludes(applePosition, position)) { //Checks if the snake is eating an apple
+    const whichApple = (array) => array[0] === position[0].valueOf() && array[1] === position[1].valueOf(); // This is the entire reason multiple apples works, it checks each array within applePositions and finds the one that overlaps with position
 
-  if (arrayIncludes(applePosition, position)) {
-
-    const whichApple = (array) => array[0] === position[0].valueOf() && array[1] === position[1].valueOf();
-
-    let index = applePosition.findIndex(whichApple);
-    applePosition.splice(index, 1);
+    let index = applePosition.findIndex(whichApple); //This is calling the aformentioned whichApple function thingy and finds the index of the apple that's being eaten
+    applePosition.splice(index, 1); //Removes the eaten apple from applePosition
   }
 
-  let randX = Math.floor(Math.random() * gridX);
+  let randX = Math.floor(Math.random() * gridX); //Generates a random X and Y coordinates between the max X and Y dimensions
   let randY = Math.floor(Math.random() * gridY);
   
-  let snakeThere = arrayIncludes(previousPosition, [randX, randY]);
+  let snakeThere = arrayIncludes(previousPosition, [randX, randY]); //This and the next line check if the snake or a different apple is already in the same square as the randomly generated coordinates
   let appleThere = arrayIncludes(applePosition, [randX, randY]);
-  while (snakeThere || appleThere) {
+  while (snakeThere || appleThere) { //This while function repeats the previous 4(5) lines of code until the generated coordinates aren't shared with the snake or a different apple
     randX = Math.floor(Math.random() * gridX);
     randY = Math.floor(Math.random() * gridY);
 
@@ -124,8 +122,8 @@ function createRandomApple() {
     appleThere = arrayIncludes(applePosition, [randX, randY]);
   }
 
-  applePosition.push([randX.valueOf(), randY.valueOf()]);
-  drawApple(randX * size, randY * size);
+  applePosition.push([randX.valueOf(), randY.valueOf()]);//This adds the generated values into the applePosition array, storing its position
+  drawApple(randX * size, randY * size); //This actually draws the apple on the canvas
 }
 
 //variables for size and stuff
@@ -146,7 +144,7 @@ function update() {
   previousPosition = [[position[0].valueOf(), position[1].valueOf()]];
 }
 
-function updateStatDisplay(){
+function updateStatDisplay() { //Does what is says
   statDisplay.innerHTML = `<p>Speed: ${speed}</p> <p>HP: Placeholder</p> <p>Max Apples: ${maxApples}</p> <p>Screen Size: ${gridX} x ${gridY}</p> <p>Difficulty: Placeholder</p> <p>Armor: Placeholder</p> <p>HP Regen: Placeholder</p>`;
 }
 
@@ -179,7 +177,7 @@ buttonOnClick(shopToGame, () => {
   goToGame(shop);
 });
 
-buttonOnClick(cheatCodeButton, () => {
+buttonOnClick(cheatCodeButton, () => { //Cheat codes/change certain variables
   let promptAnswer = prompt('CODE:')
   if (promptAnswer == 'imadev') {
     speed = Number(prompt('Speed: '));
@@ -256,25 +254,21 @@ async function move() { //Call this function to initiate the game, lets you move
       case 'ArrowUp': //Should be self-explanatory, switches direction of the snake when arrow key is pressed
         if (!vertical) {
           direction = 'up';
-          console.log('up', direction);
         }
         break;
       case 'ArrowDown':
         if (!vertical) {
           direction = 'down';
-          console.log('down', direction);
         }
         break;
       case 'ArrowLeft':
         if (!horizontal) {
           direction = 'left';
-          console.log('left', direction);
         }
         break;
       case 'ArrowRight':
         if (!horizontal) {
           direction = 'right';
-          console.log('right', direction);
         }
         break;
       default:
@@ -342,7 +336,6 @@ async function move() { //Call this function to initiate the game, lets you move
     }
 
     if (direction !== 'none') { //This is the canvas settings this specicfic if makes sure the snake doesn't move until after the first key input
-      console.log(position[0], position[1]);
       let temp = [[position[0].valueOf(), position[1].valueOf()]]; //Temporary array that is going to be put into previousPosition for storage
       previousPosition = previousPosition.concat(temp); //Adds in the current position into previousPosition
     
