@@ -101,10 +101,13 @@ function drawApple(x, y) {
   ctx.strokeRect(x, y, size, size);
 }
 
-function createRandomApple() { // I figured it out, it never actually removes the [13, 10] starting position
+function createRandomApple() {
 
   if (arrayIncludes(applePosition, position)) {
-    let index = applePosition.indexOf([position[0].valueOf(), position[1].valueOf()]);
+
+    const whichApple = (array) => array[0] === position[0].valueOf() && array[1] === position[1].valueOf();
+
+    let index = applePosition.findIndex(whichApple);
     applePosition.splice(index, 1);
   }
 
