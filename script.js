@@ -147,7 +147,7 @@ function update() {
 }
 
 function updateStatDisplay(){
-  statDisplay.innerHTML = `<p>Speed: ${speed}</p> <p>HP: Placeholder</p> <p>Max Apples: 1</p> <p>Screen Size: ${gridX} x ${gridY}</p> <p>Difficulty: Placeholder</p> <p>Armor: Placeholder</p> <p>HP Regen: Placeholder</p>`;
+  statDisplay.innerHTML = `<p>Speed: ${speed}</p> <p>HP: Placeholder</p> <p>Max Apples: ${maxApples}</p> <p>Screen Size: ${gridX} x ${gridY}</p> <p>Difficulty: Placeholder</p> <p>Armor: Placeholder</p> <p>HP Regen: Placeholder</p>`;
 }
 
 
@@ -185,6 +185,7 @@ buttonOnClick(cheatCodeButton, () => {
     speed = Number(prompt('Speed: '));
     snakeLength = Number(prompt('Snake Length: '));
     squareSizeFactor = Number(prompt('Square size factor: '));
+    maxApples = Number(prompt('Max Apples'));
     update();
     updateStatDisplay();
   }
