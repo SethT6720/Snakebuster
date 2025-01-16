@@ -153,13 +153,13 @@ function updateGame() {
 
 function updateStatDisplay() { //Does what is says
   bitsDisplay.innerText = `Bits: ${bits}`;
-  hpDisplay = `HP: ${HP}`;
-  armorDisplay = `Armor: ${armor}`;
-  speedDisplay = `Speed: ${speed}`;
-  regenDisplay = `Regeneration: ${regen}`;
-  maxApplesDisplay = `Max Apples: ${maxApples}`;
-  screenSizeDisplay = `Grid Size: ${gridX} x ${gridY}`;
-  prestigeDisplay = `Prestige: ${prestigeLevel}`;
+  hpDisplay.innerText = `HP: ${HP}`;
+  armorDisplay.innerText = `Armor: ${armor}`;
+  speedDisplay.innerText = `Speed: ${speed}`;
+  regenDisplay.innerText = `Regeneration: ${regen}`;
+  maxApplesDisplay.innerText = `Max Apples: ${maxApples}`;
+  screenSizeDisplay.innerText = `Grid Size: ${gridX} x ${gridY}`;
+  prestigeDisplay.innerText = `Prestige: ${prestigeLevel}`;
 }
 
 
