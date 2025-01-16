@@ -40,10 +40,17 @@ const dead = get('dead');
 const win = get('win');
 const screenWidth = window.innerWidth;
 const screenHeight = window.innerHeight;
+
+//Stats display stuff
 const statDisplay = get('statDisplay');
-
-
-
+const bitsDisplay = get('bitsDisplay');
+const hpDisplay = get('hpDisplay');
+const armorDisplay = get('armorDisplay');
+const speedDisplay = get('speedDisplay');
+const regenDisplay = get('regenDisplay');
+const maxApplesDisplay = get('maxApplesDisplay');
+const screenSizeDisplay = get('screenSizeDisplay');
+const prestigeDisplay = get('prestigeLevelDisplay');
 
 
 //visual based stuff
@@ -131,7 +138,7 @@ let size = squareSize(); //Pixel size of each square, assigned to a variable for
 let gridX = squareSizeFactor; //How many squares there are horizontally
 let gridY = squareSizeFactor; //How many squares there are vertically
 
-function update() {
+function updateGame() {
   if (squareSizeFactor < 9) squareSizeFactor = 9;
   gridX = squareSizeFactor
   gridY = squareSizeFactor
@@ -145,7 +152,14 @@ function update() {
 }
 
 function updateStatDisplay() { //Does what is says
-  statDisplay.innerHTML = `<p>Speed: ${speed}</p> <p>HP: Placeholder</p> <p>Max Apples: ${maxApples}</p> <p>Screen Size: ${gridX} x ${gridY}</p> <p>Difficulty: Placeholder</p> <p>Armor: Placeholder</p> <p>HP Regen: Placeholder</p>`;
+  bitsDisplay.innerText = `Bits: ${bits}`;
+  hpDisplay = `HP: ${HP}`;
+  armorDisplay = `Armor: ${armor}`;
+  speedDisplay = `Speed: ${speed}`;
+  regenDisplay = `Regeneration: ${regen}`;
+  maxApplesDisplay = `Max Apples: ${maxApples}`;
+  screenSizeDisplay = `Grid Size: ${gridX} x ${gridY}`;
+  prestigeDisplay = `Prestige: ${prestigeLevel}`;
 }
 
 
@@ -159,14 +173,17 @@ const cheatCodeButton = get('cheatCodeButton');
 
 //Nav event listeners
 buttonOnClick(initButton, () => {
+  updateStatDisplay();
   returnToShop(titleScreen);
 });
 
 buttonOnClick(deadToShop, () => {
+  updateStatDisplay();
   returnToShop(dead);
 });
 
 buttonOnClick(winToShop, () => {
+  updateStatDisplay();
   returnToShop(win);
 });
 
@@ -184,7 +201,7 @@ buttonOnClick(cheatCodeButton, () => { //Cheat codes/change certain variables
     snakeLength = Number(prompt('Snake Length: '));
     squareSizeFactor = Number(prompt('Square size factor: '));
     maxApples = Number(prompt('Max Apples'));
-    update();
+    updateGame();
     updateStatDisplay();
   }
 });
@@ -236,6 +253,13 @@ let appleStartingPosition = [startingPosition[0] + (Math.round(gridX / 2)), star
 let applePosition = [[appleStartingPosition[0].valueOf(), appleStartingPosition[1].valueOf()]];
 let position = [startingPosition[0].valueOf(), startingPosition[1].valueOf()]; //The snake head's position 
 let previousPosition = [[position[0].valueOf(), position[1].valueOf()]]; //Positions of all other blocks of the snake beside the head
+
+//Currencies
+let bits = 0; //Base currency, get from eating apples
+let betterBits = 0; //Better currency, prob not from bosses, I'll figure something out later
+let bestBits = 0; //Boss drops, Upgrades usually only cost 1 or maybe 2 if they're really good
+let specialBits = 0; // Something really cool, maybe dev only
+
 
 //Actual Stats (Probably)
 
@@ -355,6 +379,7 @@ async function move() { //Call this function to initiate the game, lets you move
       if (arrayIncludes(applePosition, position)) { //AFTER APPLE IS EATEN///////////////////////////////
         createRandomApple();
         snakeLength++;
+        bits += 1 * (prestigeLevel + 1);
       }
 
       let length = previousPosition.length
